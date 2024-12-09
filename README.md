@@ -1,4 +1,5 @@
-# Gestor de Tareas
+
+# **Gestor de Tareas**
 
 Este proyecto es un gestor de tareas básico construido con Node.js y una interfaz web. Proporciona una API REST funcional con capacidades CRUD (Crear, Leer, Actualizar, Eliminar) y una interfaz visual para gestionar tareas.
 
@@ -36,7 +37,9 @@ gestor-tareas/
 └── .gitignore          # Exclusiones para Git
 ```
 
-## Problemas Encontrados y Soluciones
+---
+
+## **Problemas Encontrados y Soluciones**
 
 1. **Archivo `tasks.json` no encontrado:**
    - **Causa:** Se utilizaban rutas relativas al leer el archivo.
@@ -52,7 +55,7 @@ gestor-tareas/
 
 ---
 
-## Pruebas Realizadas
+## **Pruebas Realizadas**
 
 Se llevaron a cabo pruebas manuales con herramientas como `curl` y el navegador para verificar:
 - La funcionalidad de cada ruta de la API (GET, POST, PUT, DELETE).
@@ -61,46 +64,45 @@ Se llevaron a cabo pruebas manuales con herramientas como `curl` y el navegador 
 
 ---
 
-## Cómo Ejecutar el Proyecto
+## **Cómo Ejecutar el Proyecto**
 
-### 1. Requisitos
+### **1. Requisitos**
 - Node.js (versión 14 o superior)
 - npm (incluido con Node.js)
 
-### 2. Instalación
+### **2. Instalación**
 1. Clonar el repositorio:
-``` bash
-git clone https://github.com/tu-usuario/gestor-tareas.git cd gestor-tareas
-``` 
+   ```bash
+   git clone https://github.com/albertusdixit/gestor-tareas.git
+   cd gestor-tareas
+   ```
 2. Instalar dependencias:
-``` bash
-npm install
-``` 
+   ```bash
+   npm install
+   ```
 
-
-### 3. Ejecución
+### **3. Ejecución**
 Iniciar el servidor:
-``` bash
-npm start
-``` 
+   ```bash
+   npm start
+   ```
 
 Abrir en el navegador:
-
+```
 http://localhost:3000
-
-
----
-
-## Lo que Queda por Hacer
-
-1. Validar las entradas del usuario en la interfaz.
-2. Añadir funcionalidad para editar tareas desde la interfaz.
-3. Mejorar la experiencia de usuario con animaciones y notificaciones.
-4. Implementar un sistema de respaldo automático para `tasks.json`.
-5. Refactorizar el código para garantizar claridad y eficiencia.
+```
 
 ---
 
-## Licencia
+## **Lo que Queda por Hacer**
+
+1. **Base de Datos**: Migrar de un archivo JSON a una base de datos como PostgreSQL.
+2. **Express**: Simplificar el manejo de rutas y middlewares con Express.
+3. **Frontend en React**: Rediseñar la interfaz web para un diseño modular y dinámico con React
+4. **Implementación en la Nube**: Desplegar la aplicación en AWS.
+5. **Sistema de Usuarios**: Añadir autenticación para permitir a cada usuario gestionar sus propias tareas.
+
+---
+
+## **Licencia**
 Este proyecto se distribuye bajo la Licencia MIT. Puedes modificarlo y distribuirlo libremente.
-
