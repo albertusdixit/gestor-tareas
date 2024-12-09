@@ -3,11 +3,10 @@ body {
     background-color: #f4f4f9;
     color: #333;
     margin: 0;
-    padding: 0;
+    padding: 2rem; /* Add padding for better appearance */
     display: flex;
     flex-direction: column;
     align-items: flex-start; /* Align items to the left */
-    padding: 2rem; /* Add padding for better appearance */
     min-height: 100vh;
 }
 
@@ -72,9 +71,19 @@ li.visible {
 li .task-text {
     flex: 1; /* Allow the task text to take available space */
     word-wrap: break-word; /* Break long text onto the next line */
+    margin-right: 1rem; /* Add space between the text and the buttons */
 }
 
 li .task-actions {
     display: flex;
     gap: 0.5rem; /* Space between the buttons */
+}
+
+li.completed {
+    background-color: #e6ffe6; /* Light green background for completed tasks */
+}
+
+li.completed .task-text {
+    text-decoration: line-through; /* Strikethrough for completed tasks */
+    color: gray; /* Dimmed text color for completed tasks */
 }

@@ -63,7 +63,6 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(tasks));
     } else if (req.method === 'POST' && req.url === '/tasks') {
-        // Handle POST /tasks
         let body = '';
         req.on('data', chunk => {
             body += chunk;
@@ -73,22 +72,22 @@ const server = http.createServer(async (req, res) => {
                 const newTask = JSON.parse(body);
                 if (!newTask.title || newTask.title.trim() === '') {
                     res.writeHead(400, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ message: 'Task title cannot be empty.' }));
+                    res.end(JSON.stringify({ message: 'El título de la tarea no puede estar vacío.' }));
                     return;
                 }
                 const tasks = await getTasks();
                 newTask.id = Date.now().toString();
+                newTask.completed = false; // Set default completed status
                 tasks.push(newTask);
                 await saveTasks(tasks);
                 res.writeHead(201, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify(newTask));
             } catch (error) {
                 res.writeHead(400, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ message: 'Error processing the request' }));
+                res.end(JSON.stringify({ message: 'Error al procesar la solicitud' }));
             }
         });
     } else if (req.method === 'PUT' && req.url.startsWith('/tasks/')) {
-        // Handle PUT /tasks/:id
         const id = req.url.split('/')[2];
         let body = '';
         req.on('data', chunk => {
@@ -97,25 +96,24 @@ const server = http.createServer(async (req, res) => {
         req.on('end', async () => {
             try {
                 const updatedTask = JSON.parse(body);
-                if (!updatedTask.title || updatedTask.title.trim() === '') {
-                    res.writeHead(400, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ message: 'Task title cannot be empty.' }));
-                    return;
-                }
                 const tasks = await getTasks();
                 const taskIndex = tasks.findIndex(task => task.id === id);
+    
                 if (taskIndex === -1) {
                     res.writeHead(404, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ message: 'Task not found.' }));
+                    res.end(JSON.stringify({ message: 'Tarea no encontrada' }));
                     return;
                 }
-                tasks[taskIndex].title = updatedTask.title.trim();
+    
+                // Update task properties
+                tasks[taskIndex] = { ...tasks[taskIndex], ...updatedTask };
                 await saveTasks(tasks);
+    
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify(tasks[taskIndex]));
             } catch (error) {
                 res.writeHead(400, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ message: 'Error processing the request' }));
+                res.end(JSON.stringify({ message: 'Error al procesar la solicitud' }));
             }
         });
     } else if (req.method === 'DELETE' && req.url.startsWith('/tasks/')) {

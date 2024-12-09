@@ -3,29 +3,33 @@ const taskForm = document.getElementById('task-form');
 const taskInput = document.getElementById('task-input');
 const taskButton = taskForm.querySelector('button'); // Selecciona el botón del formulario
 
-// Función para cargar las tareas desde la API
+// Fetch tasks from the API
 const fetchTasks = async () => {
     try {
         const response = await fetch('/tasks');
-        if (!response.ok) throw new Error('Error al obtener las tareas');
+        if (!response.ok) throw new Error('Error fetching tasks');
         const tasks = await response.json();
 
-        // Limpia la lista antes de renderizar
+        // Clear the task list before rendering
         taskList.innerHTML = '';
 
-        // Renderiza cada tarea en la lista
         tasks.forEach(task => {
             const li = document.createElement('li');
             li.className = 'task-item';
+            if (task.completed) {
+                li.classList.add('completed'); // Add completed class if task is completed
+            }
 
-            // Contenedor del texto de la tarea
             const taskText = document.createElement('span');
             taskText.className = 'task-text';
             taskText.textContent = task.title;
 
-            // Contenedor de botones
             const taskActions = document.createElement('div');
             taskActions.className = 'task-actions';
+
+            const completeButton = document.createElement('button');
+            completeButton.textContent = task.completed ? 'Desmarcar' : 'Completar';
+            completeButton.onclick = () => toggleTaskCompletion(task.id, task.completed);
 
             const editButton = document.createElement('button');
             editButton.textContent = 'Editar';
@@ -35,6 +39,7 @@ const fetchTasks = async () => {
             deleteButton.textContent = 'Eliminar';
             deleteButton.onclick = () => deleteTask(task.id);
 
+            taskActions.appendChild(completeButton);
             taskActions.appendChild(editButton);
             taskActions.appendChild(deleteButton);
 
@@ -42,12 +47,12 @@ const fetchTasks = async () => {
             li.appendChild(taskActions);
             taskList.appendChild(li);
 
-            // Clase de animación
+            // Animation class
             setTimeout(() => li.classList.add('visible'), 10);
         });
     } catch (error) {
         console.error('Error al cargar las tareas:', error.message);
-        alert('No se pudieron cargar las tareas. Por favor, intenta nuevamente.');
+        showToast('No se pudieron cargar las tareas. Intenta nuevamente.', 'red');
     }
 };
 
@@ -61,7 +66,7 @@ const addTask = async (title) => {
         });
         if (!response.ok) throw new Error('Error al agregar la tarea');
         fetchTasks();
-        showToast('Tarea agregada exitosamente');
+        showToast('Tarea agregada exitosamente', '#4CAF50'); // Verde para éxito
     } catch (error) {
         console.error('Error al agregar la tarea:', error.message);
         showToast('Error al agregar la tarea', 'red');
@@ -76,7 +81,7 @@ const startEditingTask = (id, currentTitle) => {
         event.preventDefault();
         const updatedTitle = taskInput.value.trim();
         if (updatedTitle === '') {
-            alert('El título de la tarea no puede estar vacío.');
+            showToast('El título no puede estar vacío.', 'red');
             return;
         }
         editTask(id, updatedTitle);
@@ -96,7 +101,7 @@ const editTask = async (id, title) => {
         });
         if (!response.ok) throw new Error('Error al editar la tarea');
         fetchTasks();
-        showToast('Tarea editada exitosamente');
+        showToast('Tarea editada exitosamente', '#FFC107'); // Amarillo para edición
     } catch (error) {
         console.error('Error al editar la tarea:', error.message);
         showToast('Error al editar la tarea', 'red');
@@ -109,7 +114,7 @@ const deleteTask = async (id) => {
         const response = await fetch(`/tasks/${id}`, { method: 'DELETE' });
         if (!response.ok) throw new Error('Error al eliminar la tarea');
         fetchTasks();
-        showToast('Tarea eliminada exitosamente');
+        showToast('Tarea eliminada exitosamente', '#2196F3'); // Azul para eliminación
     } catch (error) {
         console.error('Error al eliminar la tarea:', error.message);
         showToast('Error al eliminar la tarea', 'red');
@@ -121,7 +126,7 @@ const handleFormSubmit = (event) => {
     event.preventDefault();
     const title = taskInput.value.trim();
     if (title === '') {
-        alert('El título de la tarea no puede estar vacío.');
+        showToast('El título de la tarea no puede estar vacío.', 'red');
         return;
     }
     addTask(title);
@@ -141,6 +146,21 @@ const showToast = (message, color = "green") => {
         backgroundColor: color,
         stopOnFocus: true,
     }).showToast();
+};
+
+const toggleTaskCompletion = async (id, currentStatus) => {
+    try {
+        const response = await fetch(`/tasks/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ completed: !currentStatus }),
+        });
+        if (!response.ok) throw new Error('Error toggling task completion');
+        fetchTasks(); // Refresh the task list
+    } catch (error) {
+        console.error('Error toggling task completion:', error.message);
+        alert('Failed to update task completion status.');
+    }
 };
 
 // Carga las tareas al cargar la página
