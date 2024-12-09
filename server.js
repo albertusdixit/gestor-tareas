@@ -61,7 +61,6 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(tasks));
     } else if (req.method === 'POST' && req.url === '/tasks') {
-        // Manejar POST /tasks
         let body = '';
         req.on('data', chunk => {
             body += chunk;
@@ -69,6 +68,12 @@ const server = http.createServer(async (req, res) => {
         req.on('end', async () => {
             try {
                 const newTask = JSON.parse(body);
+                // Validar que el título no esté vacío
+                if (!newTask.title || newTask.title.trim() === '') {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ message: 'El título de la tarea no puede estar vacío.' }));
+                    return;
+                }
                 const tasks = await getTasks();
                 newTask.id = Date.now().toString();
                 tasks.push(newTask);

@@ -44,12 +44,16 @@ const deleteTask = async (id) => {
 // Evento para manejar el envío del formulario
 taskForm.addEventListener('submit', (event) => {
     event.preventDefault();
-    const title = taskInput.value.trim();
-    if (title) {
-        addTask(title);
-        taskInput.value = '';
+    const title = taskInput.value.trim(); // Elimina espacios en blanco
+    if (title === '') {
+        // Muestra un mensaje de error si la entrada es inválida
+        alert('El título de la tarea no puede estar vacío.');
+        return;
     }
+    addTask(title); // Llama a la función para agregar la tarea
+    taskInput.value = ''; // Limpia el campo después de agregar
 });
+
 
 // Carga las tareas al cargar la página
 fetchTasks();
