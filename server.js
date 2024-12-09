@@ -86,8 +86,7 @@ const server = http.createServer(async (req, res) => {
             }
         });
     } else if (req.method === 'PUT' && req.url.startsWith('/tasks/')) {
-        // Manejar PUT /tasks/:id
-        const id = req.url.split('/')[2];
+        const id = req.url.split('/')[2]; // Extraer el ID de la URL
         let body = '';
         req.on('data', chunk => {
             body += chunk;
@@ -95,18 +94,25 @@ const server = http.createServer(async (req, res) => {
         req.on('end', async () => {
             try {
                 const updatedTask = JSON.parse(body);
+                if (!updatedTask.title || updatedTask.title.trim() === '') {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ message: 'El título de la tarea no puede estar vacío.' }));
+                    return;
+                }
+    
                 const tasks = await getTasks();
                 const taskIndex = tasks.findIndex(task => task.id === id);
-
+    
                 if (taskIndex === -1) {
                     res.writeHead(404, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify({ message: 'Tarea no encontrada' }));
                     return;
                 }
-
-                tasks[taskIndex] = { ...tasks[taskIndex], ...updatedTask };
+    
+                // Actualizar solo el título
+                tasks[taskIndex].title = updatedTask.title.trim();
                 await saveTasks(tasks);
-
+    
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify(tasks[taskIndex]));
             } catch (error) {
