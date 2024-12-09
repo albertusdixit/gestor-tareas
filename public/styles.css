@@ -1,20 +1,80 @@
 body {
     font-family: Arial, sans-serif;
-    text-align: center;
-    margin: 20px;
-}
-form {
-    margin-bottom: 20px;
-}
-ul {
-    list-style-type: none;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align items to the left */
+    padding: 2rem; /* Add padding for better appearance */
+    min-height: 100vh;
 }
+
+h1 {
+    color: #4CAF50;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+form {
+    margin: 1rem 0;
+    display: flex;
+    gap: 0.5rem;
+}
+
+input, button {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    border: none; /* Remove default border */
+    padding: 0.5rem 1rem; /* Add some padding for consistency */
+    border-radius: 4px; /* Round the edges */
+    font-size: 0.9rem; /* Adjust font size */
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%; /* Ensure consistent width for the list */
+}
+
 li {
     display: flex;
-    justify-content: space-between;
-    margin: 10px 0;
+    justify-content: space-between; /* Keeps text and buttons on opposite sides */
+    align-items: center;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease-in-out;
 }
-button {
-    margin-left: 10px;
+
+li.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+li .task-text {
+    flex: 1; /* Allow the task text to take available space */
+    word-wrap: break-word; /* Break long text onto the next line */
+}
+
+li .task-actions {
+    display: flex;
+    gap: 0.5rem; /* Space between the buttons */
 }
